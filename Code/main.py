@@ -7,13 +7,13 @@ from CommandLogger import CommandLogger, log
 from Menu import Menu
 from input_utilities import input_int_range
 from menu_definitions import (menu_mainME, add_select, delete_select, list_select, select_select, update_select)
-from Building import Building
-from Instructor import Instructor
-from FullTimeInstructor import FullTimeInstructor
-from PartTimeInstructor import PartTimeInstructor
-from Office import Office
-from SharedOffice import SharedOffice
-from SingleOffice import SingleOffice
+from Department import Department
+from Major import Major
+from Course import Course
+from Requirement import Requirement
+from TotalRequirement import TotalRequirement
+from ChoiceRequirement import ChoiceRequirement
+from MandatoryRequirement import MandatoryRequirement
 
 
 class Session(ClientSession):
@@ -59,39 +59,47 @@ def update(session: Session):
     menu_loop(update_select, session)
 
 
-def add_building(session: Session):
+def add_department(session: Session):
     valid: bool = False
     while not valid:
         # check valid position (B4)
-        position_area = input("Enter grid position letter -->")
-        position_num = input_int_range("Enter grid position num -->", 1, 9)
-        name = input("Enter building name -->")
-        position = ''.join([position_area.upper(), position_num])
+        name = input("Enter department name -->")
+        abrev = input("Enter department abrev -->")
         try:
-            building = Building(name, position)
-            building.save()
+            department = Department(name, abrev)
+            department.save()
             valid = True
         except NotUniqueError as NUID:
             print(f'You violated a uniqueness constraint: {NUID}.  Try again')
 
 
-def add_instructor(session: Session):
+def add_major(session: Session):
     valid: bool = False
     while not valid:
-        first_name = input("Enter instructor's first name -->")
-        last_name = input("Enter instructor's last name -->")
-        instructor_id = input_int_range("Enter the identification number of instructor-->", 0, 2000)
-        # institute a creator depending on time
-        # ex. PartTimeInstructor(instructor_id, last_name, first_name)
-        # Instructor creator makes it so no other of one id can exist
+        department: Department = select_department(session)
+        name = input("Enter major name -->")
+        description = input(f'Write a description of {name} major-->')
         try:
-            instructor = Instructor(instructor_id, last_name, first_name)
-            instructor.save()
+            major = Major(department, name, description)
+            major.save()
             valid = True
         except NotUniqueError as NUID:
             print(f'You violated a uniqueness constraint: {NUID}.  Try again')
 
-
+def add_course(session: Session):
+    valid: bool = False
+    while not valid:
+        department: Department = select_department(session)
+        name = input("Enter course name -->")
+        description = input(f'Write a description of {name} course-->')
+        units = input_int_range("Enter the units of this course-->", 1, 4)
+        try:
+            course = Course(department, name, description, units)
+            course.save()
+            valid = True
+        except NotUniqueError as NUID:
+            print(f'You violated a uniqueness constraint: {NUID}.  Try again')
+            
 def add_office(session: Session):
     valid: bool = False
     while not valid:
@@ -129,63 +137,36 @@ def add_office_hours(session: Session):
             print(f"Invalid data: {VE}.  Try again.")
         except NotUniqueError as NUID:
             print(f'You violated a uniqueness constraint: {NUID}.  Try again')
-'''
-def add_schedule(session: Session):
-    valid: bool = False
-    while not valid:
-        # implement an addition for holiday
-        employee: Employee = select_employee(session)
-        work_day: WorkDay = select_work_day(session)
-        shift: Shift = select_shift(session)
-        try:
-            schedule = Schedule(employee, work_day, shift)
-            session.add(schedule)
-            session.flush()
-            valid = True
-        except IntegrityError as IE:
-            print(f'Error type: {IE.__class__.__name__} was raised.')
-            print("There must be an existing schedule conflict.")
-            session.rollback()
-    session.commit()
-'''
-def delete_building(session: Session):
+
+
+def delete_department(session: Session):
     ok: bool = False
     while not ok:
-        building: Building = select_building(session)
+        department: Department = select_department(session)
         try:
-            building.delete()
+            department.delete()
             ok = True
-            print(f'Address {str(building)} deleted.')
+            print(f'Department {department.name} deleted.')
         except OperationError as OE:
-            print(f"Error: {OE} Office(s) has office hours in this building")
+            print(f"Error: {OE} courses are dependant on this department")
 
 
-# check relation office <--> instructor
-def delete_office(session: Session):
-    office: Office = select_office(session)
-    building = office.building
-    building.remove_office(building)
-    building.save()
-    office.delete()
+# check for corruption with deletion, likely flawed
+def delete_major(session: Session):
+    departement: Department = select_department(session)
+    major = major.department
+    department.remove_department(department)
+    department.save()
+    major.delete()
 
+def delete_course(session: Session):
+    departement: Department = select_department(session)
+    course = course.department
+    department.remove_department(department)
+    department.save()
+    course.delete()
 
-def delete_instructor(session: Session):
-    ok: bool = False
-    while not ok:
-        instructor: Instructor = select_instructor(session)
-        try:
-            # instructor.officeHours, cascade delete all office hours
-            '''
-            if len(vendor.parts) >= 1:
-                for part in vendor.parts:
-                    part.delete()
-            '''
-            instructor.delete()
-            ok = True
-            print(f'Instructor {instructor.id} deleted.')
-        except ValidationError as VE:
-            print(f"Invalid data: {VE}.  Try again.")
-
+def delete_requirement(session: Session):
 
 '''
 def delete_address(session: Session):
@@ -216,73 +197,90 @@ def delete_vendor(session: Session):
 '''
 
 
-def select_building(session: Session) -> Building:
+def select_deparment(session: Session) -> Department:
     found: bool = False
-    zipcode: int = 0
+    name: str = ''
     while not found:
-        name = input("Enter building name -->")
+        name = input("Enter department name -->")
         pipeline = [{"$match": {"name": name}}]
-        building_count = len(list(Building.objects().aggregate(pipeline)))
-        if building_count != 0:
+        deparment_count = len(list(Department.objects().aggregate(pipeline)))
+        if department_count != 0:
             found = True
         else:
-            print("That building could not be found.  Try again.")
-    for building in Building.objects().aggregate(pipeline):
-        return Building.objects(id=building.get('_id')).first()
+            print("That department could not be found.  Try again.")
+    for department in Department.objects().aggregate(pipeline):
+        return Department.objects(id=department.get('_id')).first()
 
-
-def select_instructor(session: Session) -> Instructor:
-    found: bool = False
-    instructor_id: int = 0
-    while not found:
-        instructor_id = input_int_range("Enter the identification number of instructor-->", 0, 2000)
-        pipeline = [{"$match": {"id": instructor_id}}]
-        id_count = len(list(Instructor.objects().aggregate(pipeline)))
-        if id_count != 0:
-            found = True
-        else:
-            print("That instructor could not be found.  Try again.")
-    for instructor in Instructor.objects().aggregate(pipeline):
-        return Instructor.objects(id=instructor.get('_id')).first()
-
-
-def select_office(session: Session) -> Office:
+# Check the construction of major and courses
+def select_major(session: Session) -> Major:
     found: bool = False
     while not found:
-        building = select_building(session)
-        room_number = input_int_range(f"Enter the room number in building: {building.name}-->", 0, 2000)
-        pipeline = [{"$match": {"$and": [{"building_name": building.name}, {"number": room_number}]}}]
-        office_count = len(list(Office.objects().aggregate(pipeline)))
-        if office_count != 0:
+        department = select_department(session)
+        name = input("Enter department name -->")
+        pipeline = [{"$match": {"$and": [{"department_name": department.name}, {"name": name}]}}]
+        major_count = len(list(Major.objects().aggregate(pipeline)))
+        if major_count != 0:
             found = True
         else:
-            print("That office could not be found.  Try again.")
-    for office in Office.objects().aggregate(pipeline):
-        return Office.objects(id=office.get('_id')).first()
+            print("That major could not be found.  Try again.")
+    for major in Major.objects().aggregate(pipeline):
+        return Major.objects(id=major.get('_id')).first()
+
+def select_course(session: Session) -> Course:
+    found: bool = False
+    while not found:
+        department = select_department(session)
+        name = input("Enter course name -->")
+        pipeline = [{"$match": {"$and": [{"department_name": department.name}, {"name": name}]}}]
+        course_count = len(list(Course.objects().aggregate(pipeline)))
+        if course_count != 0:
+            found = True
+        else:
+            print("That course could not be found.  Try again.")
+    for course in Course.objects().aggregate(pipeline):
+        return Course.objects(id=course.get('_id')).first()
 
 
-def list_building(session: Session):
-    buildings: [Building] = Building.objects().order_by('+name')
-    for building in buildings:
-        print(building)
+def select_requirement(session: Session) -> Requirement:
+    found: bool = False
+    while not found:
+        major = select_major(session)
+        name = input("Enter requirement name -->")
+        pipeline = [{"$match": {"$and": [{"major_name": major.name}, {"name": name}]}}]
+        requirement_count = len(list(Major.objects().aggregate(pipeline)))
+        if requirement_count != 0:
+            found = True
+        else:
+            print("That requirement could not be found.  Try again.")
+    for requirement in Requirement.objects().aggregate(pipeline):
+        return Requirement.objects(id=requirement.get('_id')).first()
+
+def list_department(session: Session):
+    departments: [Department] = Department.objects().order_by('+name')
+    for department in departments:
+        print(department)
 
 
-def list_instructor(session: Session):
-    instructors: [Instructor] = Instructor.objects().order_by('+id')
-    for instructor in instructors:
-        print(instructor)
+def list_course(session: Session):
+    courses: [Course] = Course.objects().order_by('+department_name','+name')
+    for course in courses:
+        print(course)
 
 
-def list_office(session: Session):
-    # select a given building, print out all its offices
-    offices: [Office] = Office.objects().order_by('+name', '+number')
-    for office in offices:
-        print(office)
+def list_major(session: Session):
+    majors: [Major] = Major.objects().order_by('+department_name','+name')
+    for major in majors:
+        print(major)
+
+def list_requirement(session: Session):
+    requirements: [Requirement] = Requirement.objects().order_by('+major_name','+name')
+    for requirement in requirements:
+        print(requirement)
 
 
-def update_building(session: Session):
-    building = select_building(session)
-    new_name = input(f'Current name is: {building.name}.  Enter new name -->')
+def update_department(session: Session):
+    department = select_department(session)
+    new_name = input(f'Current name is: {department.name}.  Enter new name -->')
     try:
         # Necessary changes may be needed for child classes
         # Change the subsequent seminars ?
@@ -291,18 +289,48 @@ def update_building(session: Session):
             part.vendorName = newName
             part.save()
         '''
-        building.name = new_name
-        building.save()
+        deparment.name = new_name
+        department.save()
     except NotUniqueError as NUID:
         print(f'You violated a uniqueness constraint: {NUID}.  Try again')
     except OperationError as OE:
-        print(f"Error: {OE} A Part relies on this office")
+        print(f"Error: {OE} A Major or Course relies on this Department")
 
 
-def update_instructor(session: Session):
-    instructor = select_instructor(session)
+def update_course(session: Session):
+    department = select_department(session)
+    new_name = input(f'Current name is: {course.name}.  Enter new name -->')
+    try:
+        course.name = new_name
+        course.save()
+    except NotUniqueError as NUID:
+        print(f'You violated a uniqueness constraint: {NUID}.  Try again')
+    except OperationError as OE:
+        print(f"Error: {OE} A requirement relies on this course")
+
+
+def update_major(session: Session):
+    department = select_department(session)
+    new_name = input(f'Current name is: {course.name}.  Enter new name -->')
+    try:
+        # Necessary changes may be needed for child classes
+        # Change the subsequent seminars ?
+        '''
+        for part in vendor.parts:
+            part.vendorName = newName
+            part.save()
+        '''
+        major.name = new_name
+        major.save()
+    except NotUniqueError as NUID:
+        print(f'You violated a uniqueness constraint: {NUID}.  Try again')
+    except OperationError as OE:
+        print(f"Error: {OE} A requirement relies on this major")
+
+
+def update_requirement(session: Session):
+    major = select_major(session)
     new_first_name = input(f'Current name is: {instructor.first_name}.  Enter new name -->')
-    new_last_name = input(f'Current name is: {instructor.last_name}.  Enter new name -->')
     try:
         instructor.first_name = new_first_name
         instructor.last_name = new_last_name
