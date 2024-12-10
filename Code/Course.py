@@ -1,14 +1,16 @@
-from mongoengine import Document, StringField, IntField, ListField, ReferenceField, NULLIFY
+from mongoengine import Document, StringField, IntField, ListField, ReferenceField, NULLIFY, LazyReferenceField
+
+from Department import Department
 
 
 class Course(Document):
     # Fields that represent the columns in the SQL table
     name = StringField(max_length=30, required=True, primary_key=True)
+    department = ReferenceField(Department, required=True)
     departments_abbr = StringField(max_length=50, required=True)
     number = IntField(required=True)
     description = StringField(max_length=100, required=True)
     units = IntField(required=True)
-    requirements = ListField(ReferenceField('Requirement', reverse_delete_rule=NULLIFY))
 
     # Unique constraint for the combination of departments_abbr and number
     meta = {
@@ -21,3 +23,4 @@ class Course(Document):
 
     def __str__(self):
         return f'{self.name} ({self.departments_abbr} {self.number})'
+

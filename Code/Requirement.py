@@ -1,5 +1,4 @@
 from mongoengine import *
-from Course import Course
 from Major import Major
 
 
@@ -10,10 +9,17 @@ class Requirement(Document):
     major = ReferenceField(Major, required=True)
     parent_requirement = ReferenceField('Requirement', reverse_delete_rule=DENY)
     sub_requirement_names = ListField(StringField())
-    course_names = ListField(ReferenceField('Course', reverse_delete_rule=NULLIFY))
 
     meta = {'collection':'requirements', 'allow_inheritance':True, 'index_cls':False}
 
     def __str__(self):
         return f'{self.name} requirement with description: {self.description}.'
+
+    def add_sub_requirement(self, requirement):
+        if requirement.name not in self.sub_requirement_names:
+            self.sub_requirement_names.append(requirement.name)
+
+    def remove_sub_requirement(self, requirement):
+        if requirement.name in self.sub_requirement_names:
+            self.sub_requirement_names.remove(requirement.name)
 

@@ -19,77 +19,34 @@ menu_main = Menu('main', 'Please select one of the following options:', [
     Option("List existing instances", "list_members(sess)"),
     Option("Select existing instance", "select(sess)"),
     Option("Update existing instance", "update(sess)"),
-    Option("Flush", "sess.flush()"),
-    Option("Commit", "sess.commit()"),
-    Option("Abort", "sess.rollback()"),
-    Option("Exit", "pass")
-])
-
-menu_mainME = Menu('main', 'Please select one of the following options:', [
-    Option("Add new instance", "add(sess)"),
-    Option("Delete existing instance", "delete(sess)"),
-    Option("List existing instances", "list_members(sess)"),
-    Option("Select existing instance", "select(sess)"),
-    Option("Update existing instance", "update(sess)"),
-    Option("Exit", "pass")
-])
-
-menu_main_mongo = Menu('main', 'Please select one of the following options:', [
-    Option("Add new instance", "add(sess)"),
-    Option("Delete existing instance", "delete(sess)"),
-    Option("List existing instances", "list_members(sess)"),
-    Option("Select existing instance", "select(sess)"),
-    Option("Update existing instance", "update(sess)"),
-    Option("Commit", "sess.commit_transaction()"),
-    Option("Abort", "sess.abort_transaction()"),
     Option("Exit", "pass")
 ])
 
 # options for adding a new instance
 add_select = Menu('add select', 'Which type of object do you want to add?:', [
-    # Option("Automotive manufacturer", "add_manufacturer(sess)"),
-    Option("Building", "add_building(sess)"),
-    Option("Office", "add_office(sess)"),
-    Option("Instructor", "add_instructor(sess)"),
+    Option("Department", "add_department(sess)"),
+    Option("Major", "add_major(sess)"),
+    Option("Course", "add_course(sess)"),
+    Option("Requirement", "add_requirement(sess)"),
     Option("Exit", "pass")
 ])
 
 # options for deleting an existing instance
 delete_select = Menu('delete select', 'Which type of object do you want to delete?:', [
     # Option("Automotive manufacturer", "delete_manufacturer(sess)"),
-    Option("Building", "delete_building(sess)"),
-    Option("Office", "delete_office(sess)"),
-    Option("Instructor", "delete_instructor(sess)"),
-    Option("Exit", "pass")
-])
-
-# options for listing the existing instances
-list_select = Menu('list select', 'Which type of object do you want to list?:', [
-    # Option("Automotive manufacturer", "list_manufacturer(sess)"),
-    # Option("Car Model", "list_car_model(sess)"),
-    # Option("Vendor", "list_vendors(sess)"),
-    # Option("Piece Part", "list_piece_parts(sess)"),
-    Option("Offices and their instructors", "list_offices_and_instructors(sess)"),
-    Option("Exit", "pass")
-])
-
-# options for testing the select functions
-select_select = Menu('select select', 'Which type of object do you want to select:', [
-    # Option("Automotive manufacturer", "print(select_manufacturer(sess))"),
-    Option("Building", "print(select_building(sess))"),
-    Option("Instructor", "print(select_instructor(sess))"),
-    Option("Office", "print(select_office(sess))"),
+    Option("Department", "delete_department(sess)"),
+    Option("Major", "delete_major(sess)"),
+    Option("Course", "delete_course(sess)"),
+    Option("Requirement", "delete_requirement(sess)"),
     Option("Exit", "pass")
 ])
 
 # options for testing the update functions
 update_select = Menu('update select', 'Which type of object do you want to update:', [
-    # Option("Automotive manufacturer", "update_manufacturer(sess)"),
-    # Option("Car Model", "update_car_model(sess)"),
-    Option("Instructor first name", "update_instructor_first_name(sess)"),
-    Option("Instructor last name", "update_instructor_last_name(sess)"),
-    Option("Building name", "update_building_name(sess)"),
-    # Option("Piece Part Description", "update_piece_part_description(sess)"),
+    Option("Focus Area Name", "update_focus_area_name(sess)"),
+    Option("Requirement Name", "update_requirement_name(sess)"),
+    Option("Department Name", "update_department_name(sess)"),
+    Option("Course Name", "update_course_name(sess)"),
     Option("Exit", "pass")
 ])
 
@@ -112,9 +69,4 @@ yes_no = Menu("yes/no", 'Answer yes or no:', [
     Option('No', 'no')
 ])
 
-transmission_type = Menu('transmission type', 'Please select a transmission type:', [
-    Option('Automatic', 'automatic'),
-    Option('Manual', 'manual'),
-    Option('Continuously Variable', 'CVT'),
-    Option('Semi-Automatic', 'semi-automatic')
-])
+

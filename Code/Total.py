@@ -1,21 +1,14 @@
 from mongoengine import *
 from Requirement import Requirement
-from Course import Course
+from Major import Major
 
 
-class TotalRequirement(Requirement):
-    courses = ListField(ReferenceField('Courses'))
 
-    def __init__(self, major: Major, requirement_name: str, description: str, credit: int, **kwargs):
-        super().__init__(major=major, requirement_name=requirement_name, description=description, credit=credit, **kwargs)
+class Total(Requirement):
+
+    def __init__(self, major: Major, name: str, description: str, credits: int, parent_requirement=None, courses=[], sub_requirememnt_names = [], **kwargs):
+        super().__init__(major=major, name=name, description=description, credits=credits, parent_requirement = parent_requirement, courses=courses, sub_requirememnt_names=sub_requirememnt_names, **kwargs)
 
     def __str__(self):
-        return f'{super().__str__()}'
+        return f'Total {super().__str__()}'
 
-    def add_course(self, course):
-        if course not in self.courses:
-            self.courses.append(course)
-
-    def remove_course(self, course):
-        if course in self.courses:
-            self.courses.remove(course)
