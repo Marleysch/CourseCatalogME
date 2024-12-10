@@ -359,12 +359,12 @@
 				},
 				{
 					"id": "7ccda1f2-33c1-42ed-869d-2a3af30fb718",
-					"name": "sub_requirements",
-					"datatype": "objectId",
+					"name": "parent_requirement_name",
+					"datatype": "string",
 					"param": "",
 					"pk": false,
 					"nn": false,
-					"list": true,
+					"list": false,
 					"comment": "",
 					"data": "",
 					"enum": "",
@@ -376,7 +376,7 @@
 				},
 				{
 					"id": "1d685cdb-a8d8-4e40-b405-296e2e1194f0",
-					"name": "courses_name",
+					"name": "course_names",
 					"datatype": "string",
 					"param": "",
 					"pk": false,
@@ -390,6 +390,22 @@
 					"estimatedSize": "",
 					"any": "",
 					"fk": true
+				},
+				{
+					"id": "fd2dab4b-14e6-4094-b4ff-814d9daa0050",
+					"name": "sub_requirement_names",
+					"datatype": "string",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"list": true,
+					"comment": "",
+					"data": "",
+					"enum": "",
+					"validation": "",
+					"pattern": false,
+					"estimatedSize": "",
+					"any": ""
 				},
 				{
 					"id": "828c8481-45a8-4e7c-8978-5cb7dd6e7271",
@@ -449,11 +465,7 @@
 				"82b24197-6c03-4d10-b643-0e1584db95fd",
 				"611e3536-f4cb-4c62-9281-8ea40f5a473c"
 			],
-			"lines": [
-				"b7f5c92c-009a-4f5c-b1f4-4c3bb2a661ed",
-				"6fca317e-7925-4dc8-b267-9ac7c77be714",
-				"33a6df2d-dce6-49a9-8b02-071faceb2cf1"
-			],
+			"lines": [],
 			"keys": [
 				{
 					"id": "c3fd0942-c4b0-4f0c-8501-aa80b93c53d2",
@@ -615,7 +627,7 @@
 				},
 				{
 					"id": "ed15cbc0-8253-4445-aa33-7dc8acd7265c",
-					"name": "requirements_name",
+					"name": "requirement_names",
 					"datatype": "string",
 					"param": "",
 					"pk": false,
@@ -713,15 +725,13 @@
 		},
 		"094072db-63e8-42e8-95c5-3dd1500bb1c7": {
 			"id": "094072db-63e8-42e8-95c5-3dd1500bb1c7",
-			"visible": true,
+			"visible": false,
 			"name": "object",
 			"desc": "",
 			"estimatedSize": "",
 			"cols": [],
 			"relations": [],
-			"lines": [
-				"b7f5c92c-009a-4f5c-b1f4-4c3bb2a661ed"
-			],
+			"lines": [],
 			"keys": [
 				{
 					"id": "fc00f1c8-bfdc-47eb-824b-f6c0901b3978",
@@ -746,15 +756,13 @@
 		},
 		"cb81832a-0831-4615-84f0-ebc31b5c2c63": {
 			"id": "cb81832a-0831-4615-84f0-ebc31b5c2c63",
-			"visible": true,
+			"visible": false,
 			"name": "object",
 			"desc": "",
 			"estimatedSize": "",
 			"cols": [],
 			"relations": [],
-			"lines": [
-				"6fca317e-7925-4dc8-b267-9ac7c77be714"
-			],
+			"lines": [],
 			"keys": [
 				{
 					"id": "01bca383-4224-4655-b3c8-d8a8a79b637b",
@@ -779,7 +787,7 @@
 		},
 		"5606a8ca-8260-413e-92e2-03dafa9e96fd": {
 			"id": "5606a8ca-8260-413e-92e2-03dafa9e96fd",
-			"visible": true,
+			"visible": false,
 			"name": "object",
 			"desc": "",
 			"estimatedSize": "",
@@ -803,9 +811,7 @@
 				}
 			],
 			"relations": [],
-			"lines": [
-				"33a6df2d-dce6-49a9-8b02-071faceb2cf1"
-			],
+			"lines": [],
 			"keys": [
 				{
 					"id": "d1bede89-c65e-4e6b-918b-e2f944f45fa4",
@@ -993,59 +999,7 @@
 		}
 	},
 	"notes": {},
-	"lines": {
-		"b7f5c92c-009a-4f5c-b1f4-4c3bb2a661ed": {
-			"id": "b7f5c92c-009a-4f5c-b1f4-4c3bb2a661ed",
-			"name": "containment-line",
-			"desc": "",
-			"style": "dotted",
-			"parent": "ac9cbfc9-5d1e-4e11-ac0f-2c472e9b30f7",
-			"child": "094072db-63e8-42e8-95c5-3dd1500bb1c7",
-			"parentTableColId": "828c8481-45a8-4e7c-8978-5cb7dd6e7271",
-			"childTableColId": "",
-			"lineColor": "transparent",
-			"markerStart": "none",
-			"markerEnd": "none",
-			"linegraphics": "default",
-			"generate": true,
-			"code": "",
-			"caption": ""
-		},
-		"6fca317e-7925-4dc8-b267-9ac7c77be714": {
-			"id": "6fca317e-7925-4dc8-b267-9ac7c77be714",
-			"name": "containment-line",
-			"desc": "",
-			"style": "dotted",
-			"parent": "ac9cbfc9-5d1e-4e11-ac0f-2c472e9b30f7",
-			"child": "cb81832a-0831-4615-84f0-ebc31b5c2c63",
-			"parentTableColId": "1246f978-d77b-4a4c-86d2-6f51babbc1bc",
-			"childTableColId": "",
-			"lineColor": "transparent",
-			"markerStart": "none",
-			"markerEnd": "none",
-			"linegraphics": "default",
-			"generate": true,
-			"code": "",
-			"caption": ""
-		},
-		"33a6df2d-dce6-49a9-8b02-071faceb2cf1": {
-			"id": "33a6df2d-dce6-49a9-8b02-071faceb2cf1",
-			"name": "containment-line",
-			"desc": "",
-			"style": "dotted",
-			"parent": "ac9cbfc9-5d1e-4e11-ac0f-2c472e9b30f7",
-			"child": "5606a8ca-8260-413e-92e2-03dafa9e96fd",
-			"parentTableColId": "0cb53912-16dc-40ef-aa0a-95c26cb624a4",
-			"childTableColId": "",
-			"lineColor": "transparent",
-			"markerStart": "none",
-			"markerEnd": "none",
-			"linegraphics": "default",
-			"generate": true,
-			"code": "",
-			"caption": ""
-		}
-	},
+	"lines": {},
 	"model": {
 		"name": "CSULB_courses",
 		"id": "05f69cba-7de4-46bb-abeb-11e44013ed26",
@@ -1066,8 +1020,8 @@
 			"extra": 1
 		},
 		"laststoredin": {
-			"major": 9,
-			"minor": 6,
+			"major": 8,
+			"minor": 5,
 			"extra": 1
 		},
 		"writeFileParam": false,
@@ -1080,7 +1034,7 @@
 		"def_collation": "",
 		"def_others": "",
 		"connectionVersion": "",
-		"lastSaved": 1733762520583
+		"lastSaved": 1733786113167
 	},
 	"otherObjects": {},
 	"diagrams": {
@@ -1124,10 +1078,10 @@
 				},
 				"ac9cbfc9-5d1e-4e11-ac0f-2c472e9b30f7": {
 					"referencedItemId": "ac9cbfc9-5d1e-4e11-ac0f-2c472e9b30f7",
-					"x": 198,
-					"y": 390,
-					"gHeight": 236,
-					"gWidth": 267,
+					"x": 196,
+					"y": 423,
+					"gHeight": 272,
+					"gWidth": 297,
 					"color": "#ffffff",
 					"background": "#03a9f4",
 					"resized": false,
@@ -1149,43 +1103,40 @@
 					"collapsed": false
 				},
 				"094072db-63e8-42e8-95c5-3dd1500bb1c7": {
-					"referencedItemId": "094072db-63e8-42e8-95c5-3dd1500bb1c7",
-					"x": 530,
-					"y": 526,
-					"gHeight": 44,
-					"gWidth": 122,
-					"color": "#ffffff",
+					"x": -1,
+					"y": -1,
+					"gWidth": -1,
+					"gHeight": -1,
+					"color": "transparent",
 					"background": "transparent",
+					"referencedItemId": "094072db-63e8-42e8-95c5-3dd1500bb1c7",
 					"resized": false,
 					"autoExpand": true,
-					"backgroundOpacity": "10",
-					"collapsed": false
+					"backgroundOpacity": "10"
 				},
 				"cb81832a-0831-4615-84f0-ebc31b5c2c63": {
-					"referencedItemId": "cb81832a-0831-4615-84f0-ebc31b5c2c63",
-					"x": 525,
-					"y": 572,
-					"gHeight": 44,
-					"gWidth": 151,
-					"color": "#ffffff",
+					"x": -1,
+					"y": -1,
+					"gWidth": -1,
+					"gHeight": -1,
+					"color": "transparent",
 					"background": "transparent",
+					"referencedItemId": "cb81832a-0831-4615-84f0-ebc31b5c2c63",
 					"resized": false,
 					"autoExpand": true,
-					"backgroundOpacity": "10",
-					"collapsed": false
+					"backgroundOpacity": "10"
 				},
 				"5606a8ca-8260-413e-92e2-03dafa9e96fd": {
-					"referencedItemId": "5606a8ca-8260-413e-92e2-03dafa9e96fd",
-					"x": 518,
-					"y": 620,
-					"gHeight": 45,
-					"gWidth": 199,
-					"color": "#ffffff",
+					"x": -1,
+					"y": -1,
+					"gWidth": -1,
+					"gHeight": -1,
+					"color": "transparent",
 					"background": "transparent",
+					"referencedItemId": "5606a8ca-8260-413e-92e2-03dafa9e96fd",
 					"resized": false,
 					"autoExpand": true,
-					"backgroundOpacity": "10",
-					"collapsed": false
+					"backgroundOpacity": "10"
 				}
 			},
 			"scroll": {
@@ -1219,8 +1170,7 @@
 			"embeddedSpacing": "2",
 			"showMainIcon": true,
 			"showLabels": true,
-			"showCustomizations": false,
-			"embeddedDisplayMode": "compact"
+			"showCustomizations": false
 		}
 	},
 	"diagramsOrder": [],
