@@ -4,7 +4,6 @@ from mongoengine import *
 
 
 class Major(Document):
-    # Foreign Key
     department = ReferenceField(Department, required=True, reverse_delete_rule=DENY)
 
     name = StringField(db_field='name', required=True)

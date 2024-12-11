@@ -50,6 +50,13 @@ update_select = Menu('update select', 'Which type of object do you want to updat
     Option("Exit", "pass")
 ])
 
+select_select = Menu('select select', 'Which type of object do you want to select:', [
+    Option("Requirement Name", "update_requirement_name(sess)"),
+    Option("Department Name", "update_department_name(sess)"),
+    Option("Course Name", "update_course_name(sess)"),
+    Option("Exit", "pass")
+])
+
 # A menu to prompt for the amount of logging information to go to the console.
 debug_select = Menu('debug select', 'Please select a debug level:', [
     Option("Informational", "logging.INFO"),

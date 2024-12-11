@@ -6,7 +6,7 @@ from pymongo.client_session import ClientSession
 from CommandLogger import CommandLogger, log
 from Menu import Menu
 from input_utilities import input_int_range
-from menu_definitions import (menu_main, add_select, delete_select, update_select)
+from menu_definitions import (menu_main, add_select, delete_select, update_select, select_select)
 from Department import Department
 from Major import Major
 from Course import Course
@@ -43,6 +43,8 @@ def delete(session: Session):
     """Top level menu prompt for any delete operation."""
     menu_loop(delete_select, session)
 
+def select(session):
+    menu_loop(select_select, session)
 
 def update(session: Session):
     """Top level menu prompt for any update operation."""
@@ -118,68 +120,78 @@ def add_requirement(session: Session):
                 course = select_course(session)
                 courses.append(course)
                 more_courses = input("Does this requirement have more courses?(Y/N)-->")
-        sub_requirement = input("Is this a subrequirement?(Y/N)-->")
-        if sub_requirement == 'Y':
+        issub_requirement = input("Does the parent requirement exist?(Y/N)-->")
+        if issub_requirement == 'Y':
             print('Define parent requirement:')
             parent_requirement = select_requirement(session)
         else:
             parent_requirement = None
+
+        isparent_requirement = input('Does this requirement have sub requirements?(Y/n)-->')
+        sub_requirements = []
+        if isparent_requirement =='Y':
+            while isparent_requirement != 'N':
+                print('Define sub requirement:')
+                sub_requirement = select_requirement(session)
+                sub_requirements.append(sub_requirement)
+                isparent_requirement = input('Are there more sub requirements?(Y/N)-->')
 
         type = int(input('Enter the type of requirement:\n\t1 for Total requirement\n\t2 for Mandatory requirement\n\t3 for Choice requirement\n-->'))
         if type == 1:
             try:
                 total = Total(name=name, description=description, credits=credits, major=major, parent_requirement=parent_requirement)
                 total.save()
-                parent_requirement.add_sub_requirement(total)
-                parent_requirement.save()
+                if parent_requirement is not None:
+                    parent_requirement.add_sub_requirement(total)
+                    parent_requirement.save()
                 for course in courses:
                     courserequirement = CourseRequirement(course=course, requirement=total)
                     courserequirement.save()
+                for requirement in sub_requirements:
+                    requirement.parent_requirement = total
+                    requirement.save()
+                    mandatory.add_sub_requirement(requirement)
+                    mandatory.save()
                 valid = True
-            except NotUniqueError as NUID:
+            except Exception as NUID:
                 print(f'You violated a uniqueness constraint: {NUID}.  Try again')
         if type == 2:
             try:
                 mandatory = Mandatory(name=name, description=description, credits=credits, major=major, parent_requirement=parent_requirement)
                 mandatory.save()
-                parent_requirement.add_sub_requirement(mandatory)
-                parent_requirement.save()
+                if parent_requirement is not None:
+                    parent_requirement.add_sub_requirement(mandatory)
+                    parent_requirement.save()
                 for course in courses:
                     courserequirement = CourseRequirement(course=course, requirement=mandatory)
                     courserequirement.save()
+                for requirement in sub_requirements:
+                    requirement.parent_requirement = mandatory
+                    requirement.save()
+                    mandatory.add_sub_requirement(requirement)
+                    mandatory.save()
                 valid = True
-            except NotUniqueError as NUID:
+            except Exception as NUID:
                 print(f'You violated a uniqueness constraint: {NUID}.  Try again')
         if type == 3:
             try:
                 choice = Choice(name=name, description=description, credits=credits, major=major, parent_requirement=parent_requirement)
                 choice.save()
-                parent_requirement.add_sub_requirement(choice)
-                parent_requirement.save()
+                if parent_requirement is not None:
+                    parent_requirement.add_sub_requirement(choice)
+                    parent_requirement.save()
                 for course in courses:
                     courserequirement = CourseRequirement(course=course, requirement=choice)
                     courserequirement.save()
+                for requirement in sub_requirements:
+                    requirement.parent_requirement = choice
+                    requirement.save()
+                    mandatory.add_sub_requirement(requirement)
+                    mandatory.save()
                 valid = True
-            except NotUniqueError as NUID:
+            except Exception as NUID:
                 print(f'You violated a uniqueness constraint: {NUID}.  Try again')
 
-
-# def add_office_hours(session: Session):
-#     valid: bool = False
-#     while not valid:
-#         office: Office = select_office(session)
-#         instructor: Instructor = select_instructor(session)
-#         office_hour = (office, instructor)
-#         # implement a choice for shared or single
-#         try:
-#             office.save()
-#             office_hour.add(office)
-#             office_hour.save()
-#             valid = True
-#         except ValidationError as VE:
-#             print(f"Invalid data: {VE}.  Try again.")
-#         except NotUniqueError as NUID:
-#             print(f'You violated a uniqueness constraint: {NUID}.  Try again')
 
 """DELETES"""
 def delete_department(session: Session):
@@ -211,6 +223,10 @@ def delete_course(session: Session):
     while not ok:
         course: Course = select_course(session)
         try:
+            course_requirement = select_course_requirement_via_course(session, course)
+            while course_requirement != "That course requirement could not be found. Try again.":
+                course_requirement.delete()
+                course_requirement = select_course_requirement_via_course(session, course)
             course.delete()
             ok = True
             print(f'Department {course.name} deleted.')
@@ -222,6 +238,13 @@ def delete_requirement(session: Session):
     while not ok:
         requirement: Requirement = select_requirement(session)
         try:
+            course_requirement = select_course_requirement_via_requirement(session, requirement)
+            while course_requirement != "That course requirement could not be found. Try again.":
+                course_requirement.delete()
+                course_requirement = select_course_requirement_via_requirement(session, requirement)
+            for prequirement in Requirement.objects:
+                if requirement.name in prequirement.sub_requirement_names:
+                    prequirement.remove_sub_requirement(requirement)
             requirement.delete()
             ok = True
             print(f'Department {requirement.name} deleted.')
@@ -231,6 +254,30 @@ def delete_requirement(session: Session):
 
 
 """"SELECTS"""
+def select_course_requirement_via_course(session, course):
+    found: bool = False
+    while not found:
+        pipeline = [{"$match": {"course": course.id}}]
+        course_requirement_count = len(list(CourseRequirement.objects().aggregate(pipeline)))
+        if course_requirement_count != 0:
+            found = True
+        else:
+            return "That course requirement could not be found. Try again."
+    for courserequirement in CourseRequirement.objects().aggregate(pipeline):
+        return CourseRequirement.objects(id=courserequirement.get('_id')).first()
+
+def select_course_requirement_via_requirement(session, requirement):
+    found: bool = False
+    while not found:
+        pipeline = [{"$match": {"requirement": requirement.id}}]
+        course_requirement_count = len(list(CourseRequirement.objects().aggregate(pipeline)))
+        if course_requirement_count != 0:
+            found = True
+        else:
+            return "That course requirement could not be found. Try again."
+    for courserequirement in CourseRequirement.objects().aggregate(pipeline):
+        return CourseRequirement.objects(id=courserequirement.get('_id')).first()
+
 def select_department(session: Session) -> Department:
     found: bool = False
     name: str = ''
@@ -292,31 +339,18 @@ def select_requirement(session: Session) -> Requirement:
 
 
 """UPDATES"""
-def update_focus_area_name(session: Session):
-    department = select_department(session)
-    new_name = input(f'Current name is: {department.name}.  Enter new name -->')
-    try:
-        # Necessary changes may be needed for child classes
-        # Change the subsequent seminars ?
-        '''
-        for part in vendor.parts:
-            part.vendorName = newName
-            part.save()
-        '''
-        deparment.name = new_name
-        department.save()
-    except NotUniqueError as NUID:
-        print(f'You violated a uniqueness constraint: {NUID}.  Try again')
-    except OperationError as OE:
-        print(f"Error: {OE} A Major or Course relies on this Department")
-
-
 def update_requirement_name(session: Session):
-    department = select_department(session)
-    new_name = input(f'Current name is: {course.name}.  Enter new name -->')
+    requirement = select_requirement(session)
+    new_name = input(f'Current name is: {requirement.name}.  Enter new name -->')
+    old_name = requirement.name
     try:
-        course.name = new_name
-        course.save()
+        requirement.name = new_name
+        requirement.save()
+        for requirement in Requirement.objects:
+            if old_name in requirement.sub_requirement_names:
+                requirement.sub_requirement_names.remove(old_name)
+                requirement.sub_requirement_names.append(new_name)
+                requirement.save()
     except NotUniqueError as NUID:
         print(f'You violated a uniqueness constraint: {NUID}.  Try again')
     except OperationError as OE:
@@ -324,18 +358,11 @@ def update_requirement_name(session: Session):
 
 
 def update_course_name(session: Session):
-    department = select_department(session)
+    course = select_department(session)
     new_name = input(f'Current name is: {course.name}.  Enter new name -->')
     try:
-        # Necessary changes may be needed for child classes
-        # Change the subsequent seminars ?
-        '''
-        for part in vendor.parts:
-            part.vendorName = newName
-            part.save()
-        '''
-        major.name = new_name
-        major.save()
+        course.name = new_name
+        course.save()
     except NotUniqueError as NUID:
         print(f'You violated a uniqueness constraint: {NUID}.  Try again')
     except OperationError as OE:
@@ -343,25 +370,25 @@ def update_course_name(session: Session):
 
 
 def update_department_name(session: Session):
-    pass
-    # major = select_major(session)
-    # new_first_name = input(f'Current name is: {instructor.first_name}.  Enter new name -->')
-    # try:
-    #     instructor.first_name = new_first_name
-    #     instructor.last_name = new_last_name
-    #     instructor.save()
-    # except NotUniqueError as NUID:
-    #     print(f'You violated a uniqueness constraint: {NUID}.  Try again')
-    # except OperationError as OE:
-    #     print(f"Error: {OE} A Part relies on this office")
+    department = select_department(session)
+    new_name = input(f'Current name is: {department.name}.  Enter new name -->')
+    try:
+        department.name = new_name
+        department.save()
+    except NotUniqueError as NUID:
+        print(f'You violated a uniqueness constraint: {NUID}.  Try again')
+    except OperationError as OE:
+        print(f"Error: {OE} A requirement relies on this major")
 
 
 if __name__ == '__main__':
     print('Starting in main.')
+
     mongoengine.connect('Demonstration',host='mongodb+srv://marleyschneider01:Fire212121!@cecs-323-fall-2024.60zon.mongodb.net/?retryWrites=true&w=majority&appName=CECS-323-Fall-2024')
     db = mongoengine.connection.get_db()
     monitoring.register(CommandLogger())
     sess: Session = db.client.start_session()
+    # print(select_course_requirement_via_requirement(sess, select_requirement(sess)))
     main_action: str = ''
     while main_action != menu_main.last_action():
         main_action = menu_main.menu_prompt()

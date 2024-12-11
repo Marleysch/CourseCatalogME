@@ -5,7 +5,7 @@ from Department import Department
 
 class Course(Document):
     # Fields that represent the columns in the SQL table
-    name = StringField(max_length=30, required=True, primary_key=True)
+    name = StringField(max_length=100, required=True)
     department = ReferenceField(Department, required=True)
     departments_abbr = StringField(max_length=50, required=True)
     number = IntField(required=True)
@@ -15,7 +15,7 @@ class Course(Document):
     # Unique constraint for the combination of departments_abbr and number
     meta = {
         'indexes': [
-            {'fields': ['departments_abbr', 'number'], 'unique': True}
+            {'fields': ['departments_abbr', 'number'], 'name':'courses_pk','unique': True}
         ],
         # Ensure the MongoDB collection is named 'courses'
         'collection': 'courses'
