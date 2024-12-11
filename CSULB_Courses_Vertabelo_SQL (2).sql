@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2024-12-09 17:58:41.907
+-- Last modification date: 2024-12-11 01:23:52.56
 
 -- tables
 -- Table: choices
@@ -10,7 +10,7 @@ CREATE TABLE choices (
 
 -- Table: course_requirements
 CREATE TABLE course_requirements (
-    requirement_name varchar(30)  NOT NULL,
+    requirement_name varchar(30)  NULL,
     course_name varchar(30)  NOT NULL,
     CONSTRAINT course_requirements_pk PRIMARY KEY (requirement_name,course_name)
 );
@@ -54,6 +54,7 @@ CREATE TABLE requirements (
     majors_name varchar(30)  NOT NULL,
     description varchar(100)  NOT NULL,
     credits int  NOT NULL,
+    parent_requirements_name varchar(30)  NULL,
     CONSTRAINT requirements_pk PRIMARY KEY (name)
 );
 
@@ -116,6 +117,14 @@ ALTER TABLE mandatories ADD CONSTRAINT mandatories_requirements
 ALTER TABLE requirements ADD CONSTRAINT requirements_majors
     FOREIGN KEY (majors_name)
     REFERENCES majors (name)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: requirements_requirements (table: requirements)
+ALTER TABLE requirements ADD CONSTRAINT requirements_requirements
+    FOREIGN KEY (parent_requirements_name)
+    REFERENCES requirements (name)  
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;

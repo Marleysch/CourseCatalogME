@@ -19,7 +19,7 @@
         </Counter>
         <Counter>
             <Name>column</Name>
-            <Value>20</Value>
+            <Value>21</Value>
             <Prefix>c</Prefix>
         </Counter>
         <Counter>
@@ -34,7 +34,7 @@
         </Counter>
         <Counter>
             <Name>reference</Name>
-            <Value>9</Value>
+            <Value>10</Value>
             <Prefix>r</Prefix>
         </Counter>
         <Counter>
@@ -109,7 +109,7 @@
         </Counter>
         <Counter>
             <Name>referenceDisplay</Name>
-            <Value>9</Value>
+            <Value>10</Value>
             <Prefix>rd</Prefix>
         </Counter>
     </Counters>
@@ -321,6 +321,15 @@
                     <CheckExpression></CheckExpression>
                     <Properties/>
                 </Column>
+                <Column Id="c21">
+                    <Name>parent_requirements_name</Name>
+                    <Type>varchar(30)</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
             </Columns>
             <PrimaryKey>
                 <Name></Name>
@@ -343,7 +352,7 @@
                     <Name>requirement_name</Name>
                     <Type>varchar(30)</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -529,7 +538,7 @@
                 </ReferenceColumn>
             </ReferenceColumns>
             <Cardinality>0..*</Cardinality>
-            <Mandatory>true</Mandatory>
+            <Mandatory>false</Mandatory>
             <OnUpdateAction>None</OnUpdateAction>
             <OnDeleteAction>None</OnDeleteAction>
             <Properties/>
@@ -547,7 +556,7 @@
                     <FKColumn>c17</FKColumn>
                 </ReferenceColumn>
             </ReferenceColumns>
-            <Cardinality>0..*</Cardinality>
+            <Cardinality>1..*</Cardinality>
             <Mandatory>true</Mandatory>
             <OnUpdateAction>None</OnUpdateAction>
             <OnDeleteAction>None</OnDeleteAction>
@@ -610,6 +619,25 @@
             <OnDeleteAction>None</OnDeleteAction>
             <Properties/>
         </Reference>
+        <Reference Id="r10">
+            <Name>requirements_requirements</Name>
+            <Description></Description>
+            <PKTable>t4</PKTable>
+            <FKTable>t4</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c5</PKColumn>
+                    <FKColumn>c21</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>false</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>None</OnDeleteAction>
+            <Properties/>
+        </Reference>
     </References>
     <Sequences/>
     <Notes/>
@@ -649,8 +677,8 @@
         <TableDisplay Id="td4">
             <X>6486.5</X>
             <Y>7071.5</Y>
-            <Width>202.0</Width>
-            <Height>86.0</Height>
+            <Width>256.0</Width>
+            <Height>102.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t4</Table>
@@ -795,11 +823,11 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>7158.5</X>
-                    <Y>7078.5</Y>
+                    <Y>7091.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>7041.5</X>
-                    <Y>7078.5</Y>
+                    <Y>7091.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>7041.5</X>
@@ -880,6 +908,35 @@
             <PkTableDisplay>td4</PkTableDisplay>
             <FkTableDisplay>td8</FkTableDisplay>
             <Reference>r9</Reference>
+        </ReferenceDisplay>
+        <ReferenceDisplay Id="rd10">
+            <Color>#000000</Color>
+            <Type>Self_5CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>6507.5</X>
+                    <Y>7081.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>6507.5</X>
+                    <Y>7041.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>6456.5</X>
+                    <Y>7041.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>6456.5</X>
+                    <Y>7081.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>6552.5</X>
+                    <Y>7081.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td4</PkTableDisplay>
+            <FkTableDisplay>td4</FkTableDisplay>
+            <Reference>r10</Reference>
         </ReferenceDisplay>
     </ReferenceDisplays>
     <Properties>
