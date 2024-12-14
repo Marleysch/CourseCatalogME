@@ -1,3 +1,4 @@
+
 -- Created by Vertabelo (http://vertabelo.com)
 -- Last modification date: 2024-12-09 17:58:41.907
 
@@ -184,7 +185,31 @@ majors(name, deparmentName, description) values
  chemical reactions, stoichiometry, thermochemistry, electronic structure, bonding, and 
  properties of solids, liquids, gases, and solutions.', '5'),
  
-('', '', '', '', '' ), --COME BACK TO THIS. Do I have to list all the courses under Degree Progress if they are the same as what was above on the home page?
+--First-Time First-Year Students:
+('Introduction to Programming and Problem Solving ', 'CECS', '174', 
+ 'Introduction to basic concepts of computer science and fundamental
+ techniques for solving problems using the Python programming language. 
+ Variables, data types, conditional statements, loops and arrays. 
+ Programming style. Applications to numerical and non-numerical problems.', '3'),
+ 
+('Calculus I', 'MATH', '122', 'Limits. Continuous functions. Derivatives and 
+ applications including graphing, related rates, and optimization. 
+ Transcendental functions. L’Hospital’s Rule. Antiderivatives. 
+ Definite integrals. Area under a curve.', '4'),
+
+--Transfer Students:
+('Calculus II', 'MATH', '123', 'Applications of the integral. 
+ Techniques of integration. Infinite series including convergence tests and Taylor series. 
+ Parametric equations. Polar coordinates. Introduces differential equations.', '4'),
+
+--Either:
+('Mechanics and Heat', 'PHYS', '151', 'Kinematics, Newton’s Laws, rotational motion, 
+ conservation laws, mechanical waves, and laws of thermodynamics.', '4'),
+
+('General Chemistry', 'CHEM', '111A', ' Introduction to principles of chemistry including 
+ chemical reactions, stoichiometry, thermochemistry, electronic structure, bonding, and 
+ properties of solids, liquids, gases, and solutions.', '5'),
+
 
 --Lower Division
 ('Introduction to Computer Engineering and Computer Science', 'CECS', '105', 
