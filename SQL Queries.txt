@@ -29,8 +29,8 @@ ORDER BY courserequrirements.name;
 5. For each department that contributes a course to the CECS computer science degree, list all the courses in that department.
 WITH cecsdepartments AS (SELECT DISTINCT departments.name AS "CECS Collaboration"
   FROM departments INNER JOIN courses on departments.name = courses.departmentname
-  INNER JOIN coursefulfillment USING (coursename)
-  WHERE coursefulfillment.requirementname LIKE "%Bachelor's%"
+  INNER JOIN courserequirements USING (coursename)
+  WHERE courserequirements.requirementname LIKE "%Bachelor's%"
 )
 SELECT "CECS Collaboration", courses.abrev || ' ' || courses.number || ': '|| courses.name AS "COURSE"
 FROM cecsdepartments INNER JOIN courses on department.name = courses.departmentname
