@@ -1,39 +1,37 @@
 SQL Queries
-# Effectively completed
+
 1. Report out all the requirements for the major in a fashion that is easily readable.
-SELECT DISTINCT major.name, requirement.name, requirement.description
-FROM requirements INNER JOIN majors on major.name = requirements.majorname
-ORDER BY major.name, requirement.name;
+SELECT DISTINCT majors.name, requirements.name, requirements.description
+FROM requirements INNER JOIN majors on majors.name = requirements.majorname
+ORDER BY majors.name, requirements.name;
 
-# USE the fullfillment class to get all the propermatches of courses to requirements
 2. For each course, find all the requirements that it could be used in.
-SELECT course.name, requirement.name
-FROM courses CROSS JOIN requirements
-WHERE courses NOT IN (SELECT course.name
-ORDER BY course.name;
+SELECT courserequirements.coursename, courserequirements.requirementname
+FROM courserequirements
+ORDER BY courserequirement.coursename;
 
-# Adjust for alphabetical order
+
 3. List all the Upper Division courses in alphabetical order.
-SELECT DISTINCT course.abrev || ' ' || course.number || ': '|| course.name AS "UPPER DIVISION"
+SELECT DISTINCT courses.abrev ||': '|| courses.name AS "UPPER DIVISION"
 FROM courses
-WHERE course.number >= 300
+WHERE courses.number >= 300
 ORDER BY "UPPER DIVISION";
 
-# Syntax has issues, LISTAGG needs research
-4. List all the focus areas, one line each, with a list of the courses in that focus area. ListAgg in SQL will be a help here.
-SELECT requrirement.name, LISTAGG(course.abrev || ' ' || course.number || ': '|| course.name AS "COURSE", ', ') WITHIN GROUP (ORDER BY course.number)
-FROM courserequirements
-WHERE requirements.name LIKE '%ELECTIVE%'
-GROUP BY requirement.name
-ORDER BY requirement.name;
 
-# Confusing wording, needs clarification; Start by finding the departments needed to fullfill a major, getting all the courses from the dept is easy
+4. List all the focus areas, one line each, with a list of the courses in that focus area. ListAgg in SQL will be a help here.
+SELECT courserequrirements.requirementname, LISTAGG(courserequrirements.coursename AS "COURSE", ', ') WITHIN GROUP (ORDER BY courserequrirements.requirementname)
+FROM courserequirements
+WHERE courserequrirements.requirementname LIKE '%elective%'
+GROUP BY courserequrirements.name
+ORDER BY courserequrirements.name;
+
+
 5. For each department that contributes a course to the CECS computer science degree, list all the courses in that department.
-WITH cecsdepartments AS (SELECT DISTINCT department.name AS "CECS Collaboration"
-  FROM departments INNER JOIN courses on department.name = courses.departmentname
+WITH cecsdepartments AS (SELECT DISTINCT departments.name AS "CECS Collaboration"
+  FROM departments INNER JOIN courses on departments.name = courses.departmentname
   INNER JOIN coursefulfillment USING (coursename)
-  WHERE coursefulfillment.requirementname LIKE "%computer science%"
+  WHERE coursefulfillment.requirementname LIKE "%Bachelor's%"
 )
-SELECT "CECS Collaboration", course.abrev || ' ' || course.number || ': '|| course.name AS "COURSE"
-FROM cecsdepartments INNER JOIN courses on department.name
+SELECT "CECS Collaboration", courses.abrev || ' ' || courses.number || ': '|| courses.name AS "COURSE"
+FROM cecsdepartments INNER JOIN courses on department.name = courses.departmentname
 ORDER BY "CECS Collaboration", "COURSE"
