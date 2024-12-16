@@ -186,7 +186,6 @@ majors(name, deparmentName, description) values
  properties of solids, liquids, gases, and solutions.', '5'),
  
 --First-Time First-Year Students:
-
 ('Introduction to Programming and Problem Solving ', 'CECS', '174', 
  'Introduction to basic concepts of computer science and fundamental
  techniques for solving problems using the Python programming language. 
@@ -199,7 +198,6 @@ majors(name, deparmentName, description) values
  Definite integrals. Area under a curve.', '4'),
 
 --Transfer Students:
-
 ('Calculus II', 'MATH', '123', 'Applications of the integral. 
  Techniques of integration. Infinite series including convergence tests and Taylor series. 
  Parametric equations. Polar coordinates. Introduces differential equations.', '4'),
@@ -214,7 +212,6 @@ majors(name, deparmentName, description) values
 
 
 --Lower Division
-
 ('Introduction to Computer Engineering and Computer Science', 'CECS', '105', 
  'Introduction to the fields of computer engineering and computer science. 
  Current and future trends and challenges in various fields of computing. 
@@ -288,7 +285,6 @@ majors(name, deparmentName, description) values
  and the allied health fields.', '4'),
  
  --Upper Division:
-
 ('System Programming', 'CECS', '325', 'Development, debugging, and 
  deployment of systems-level software for experienced programmers. 
  Operating system abstractions for processes, memory management, file systems, and parallel programming. 
@@ -348,7 +344,6 @@ majors(name, deparmentName, description) values
  CECS 491A emphasizing written communication, teamwork and the Object- Oriented Methodology', '3'),
  
 --Take one course from the following:
-
 ('Scientific Research Communication', 'ENGR', '361', 'Introduction to technical writing for students pursuing 
  research careers. Accessing and using research literature. Writing technical and research reports for 
  various purposes and audiences. Oral presentation of research and scientific information. 
@@ -360,7 +355,6 @@ majors(name, deparmentName, description) values
  smart systems, and gamification. Systems thinking approaches and development of feasible future scenarios.', '3'),
  
 --Take one course from the following:
-
 ('Stochastic Computing', 'CECS', '381', 'Applications of probability and statistics to computing. 
  Topics include axioms of probability,random variables and their statistics, discrete and 
  continuous probability distributions, Chernoff bounds, randomized algorithms, Markov chains, 
@@ -372,9 +366,7 @@ majors(name, deparmentName, description) values
  regression and analytic methods. Programming assignments using Python.', '3'),
  
 --Take 18 units of electives:
-
 --Take 12 units from one of the following focus areas:
-
 --Take the below course:
 ('Database Fundamentals', 'CECS', '323', 'Techniques for representing data using modern database systems. 
  Designing schemas in relational, document, and other models of data storage. Data manipulation languages. 
@@ -573,6 +565,7 @@ insert into
 requirements(name, majorsName, partOf,description, credits)values
 
 --Requirements Overview:
+
 ('Requirements', 'Lower Division:', 'Requirements', 'Computer Science and Engineering(CECS) Bachelors Degree',
  
  'A minimum of 120 units is required for the Bachelor’s Degree. A grade of “C” or better must be achieved in 
@@ -582,6 +575,7 @@ requirements(name, majorsName, partOf,description, credits)values
 --Lower Division Requirements:
 
 --Take all the following Courses:
+
 ('Lower Division:', 'Take all of the following courses:', 'part of Requirements', 'Take a total of 60 units of the following Lower Division courses:', 60),
 
 ('Approved Science Electives:', 'Take all of the following courses:', 'Lower Division:', 'Take a minimum of 8 units of approved science electives:', 8),
@@ -589,6 +583,7 @@ requirements(name, majorsName, partOf,description, credits)values
 ('Remaining units to be choosen from:', 'Lower Division', 'Requirements', 'Choose from the remaining science elective selections:' 12),
 
 --Upper Division Requirements:
+
 ('Take all the following courses:', 'Upper Division', 'Requirements', 'Take the following courses, and the last 18 units of elective Senior Year' 60),
  
 ('Take one course from the following:', 'Upper Division', 'Requirements', 'Choose one of the two Engineering Electives:', 6),
@@ -596,17 +591,14 @@ requirements(name, majorsName, partOf,description, credits)values
 ('Take one course from the following', 'Upper Division', 'Requirements', 'Choose one of the two Computer Science and Engineering Electives:', 6),
 
 ('Take 18 units of electives:', 'Take the below course:', 'Take 12 units from one of the following focus areas:', 'Requried Software Development Course(s)
- 
  Students must choose:', 3),
 
 ('Take the remaining 9 units from the following', 'Software Development', 'Take 12 units from the following focus areas:', 'Students must take 9 units 
- 
   From the following list of courses:', 15),
   
 ('Cyber Security', 'Take the below course:', 'Upper Division:', 'Take the below course:', 3),
 
 ('Take the remaining 9 units from the following:', 'Cybersecurity', 'Take 12 units from the following focus areas:',
- 
  'Take the remaining electives, and take machine learning:' 15),
  
 ('Machine Learning', 'Take the below course:', 'Take 12 units from the following focus areas:', 'Take the required course bellow:', 3),
@@ -614,5 +606,4 @@ requirements(name, majorsName, partOf,description, credits)values
 ('Take the remaining 9 units from the following:', 'Machine Learning', 'Take 12 units from one of the following focus areas:', 15),
 
 ('Take the remaining 6 units of upper division electives from the following:', 'Take 12 units from one of the following focus areas:', 'Upper Division:',
- 
  'Requirements:', 79);
